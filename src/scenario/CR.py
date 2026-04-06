@@ -54,13 +54,13 @@ class CR:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--case_database", default = "/root/J1Bench/src/data/case/J1-Eval_CR.jsonl", type=str)
+        parser.add_argument("--case_database", default = "/root/projects/J1Bench/src/data/case/J1-Eval_CR.jsonl", type=str)
         parser.add_argument("--defendant", default="Agent.Defendant.GPT_CR", help="registry name of defendant agent")
         parser.add_argument("--lawyer", default="Agent.Lawyer.GPT_CR", help="registry name of lawyer agent")
         parser.add_argument("--procurator", default="Agent.Procurator.GPT_CR", help="registry name of Procurator agent")
         parser.add_argument("--judge", default="Agent.Judge.GPT_CR", help="registry name of judge agent")
         parser.add_argument("--max_conversation_turn", default=35, type=int, help="max conversation turn")
-        parser.add_argument("--save_path", default="/root/J1Bench/src/data/dialog_history/GPT/CR_dialog_history.jsonl", help="save path for dialog history")
+        parser.add_argument("--save_path", default="/root/projects/J1Bench/src/data/dialog_history/GPT/CR_dialog_history.jsonl", help="save path for dialog history")
         parser.add_argument("--max_workers", default=2, type=int, help="max workers for parallel diagnosis")
         
     def remove_processed_cases(self): # 移除掉已经处理过的cases

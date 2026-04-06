@@ -10,7 +10,7 @@ import argparse
 
 class DDEvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/J1Bench/src/data/case/J1-Eval_DD.jsonl')
+        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_DD.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -19,9 +19,9 @@ class DDEvaluator:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/J1Bench/src/Eval/final_result/DD", type = str)
+        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/DD", type = str)
     
     def _clean(self, text):
         clean_words = ['。', '法定代表人：', '住所：', '住', ' ']
@@ -144,13 +144,23 @@ class DDEvaluator:
         评分：；原因：
         '''
         
+        # Define a quick, robust helper function to extract scores safely
+        def safe_extract_score(llm_output):
+            match = re.match(r'^(?:评分[：:\s]*)?(\d+(?:\.\d+)?)', llm_output.strip())
+            return float(match.group(1)) / 10 if match else 0.0
+
         model_defence = model_answer['defense'].replace(' ','')
         full_prompt_defense = prompt_defense.format(gt_answer = defense, model_answer = model_defence)
+        
+        ans1 = func.get_completion(full_prompt_defense, [], flag=0)[0]
         try:
-            DEF_score = float(func.get_completion(full_prompt_defense, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分',''))/10
+            # First attempt
+            DEF_score = safe_extract_score(ans1)
         except:
+            # Fallback attempt
             full_prompt_defense = prompt_defense.format(gt_answer = defense, model_answer = original_model_answer)
-            DEF_score = float(func.get_completion(full_prompt_defense, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分',''))/10
+            ans2 = func.get_completion(full_prompt_defense, [], flag=0)[0]
+            DEF_score = safe_extract_score(ans2)
         
         # 统计证据
         prompt_evi = '''你是一名法律专家。请根据“法律问题”和“标准答案”，判断“待评测答案”是否完全、准确地涵盖了“标准答案”的所有核心要点，由此给出0-10分的评分。你**不用考虑待评测答案表达是否简洁、重点是否突出、是否使用寒暄语、结构是否冗长等非实质性因素**，无须因不够简洁而扣分。
@@ -181,13 +191,15 @@ class DDEvaluator:
                 count += 1
                 
             full_prompt_evi = prompt_evi.format(gt_answer=gtevidence, model_answer=model_evidence)
-            temp = float(func.get_completion(full_prompt_evi, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分',''))/10
+            ans_evi = func.get_completion(full_prompt_evi, [], flag=0)[0]
+            temp = safe_extract_score(ans_evi)
             evi_scores += temp
             total_evi_scores += 1
         else:
             gtevidence = '无相关证据'
             full_prompt_evi = prompt_evi.format(gt_answer=gtevidence, model_answer=model_evidence)
-            temp = float(func.get_completion(full_prompt_evi, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分',''))/10
+            ans_evi = func.get_completion(full_prompt_evi, [], flag=0)[0]
+            temp = safe_extract_score(ans_evi)
             evi_scores += temp
             total_evi_scores += 1
         evi_score = evi_scores/total_evi_scores
@@ -249,6 +261,7 @@ class DDEvaluator:
     def evaluate(self, model, defendant_dh, defendant_type, ground_truth):
         id = defendant_dh['case_id']
         flag = False
+        model_defence = ""
         for dialog in reversed(defendant_dh['dialog_history']):
             if dialog['role'] == 'Lawyer' and dialog['content'] == None:
                 flag = False
@@ -264,18 +277,18 @@ class DDEvaluator:
             print(f'Case {id} unfinished task!')
             evaluation_result = {
                 'DOC': {
-                    "RES": {'RES_score': 0, 'model_defence': 0, 'ground_truth': 0},
-                    "DEF": {'DEF_score': 0, 'model_defence': 0, 'ground_truth': 0 },
-                    "EVI": {'evi_score': 0, 'model_evidence': 0, 'ground_truth': 0},
-                    "AVE": np.mean([0, 0, 0])
+                    "RES": {'RES': 0, 'model_RES': 0, 'ground_truth': 0},
+                    "DEF": {'DEF': 0, 'model_DEF': 0, 'ground_truth': 0 },
+                    "EVI": {'EVI': 0, 'model_EVI': 0, 'ground_truth': 0},
+                    "AVE": 0.0
                 },
                 'FOR': {
                     "label_score": 0,
                     "sequential_score": 0,
-                    "FOR": 0,
+                    "AVE": 0.0,
                     'model_defence': model_defence
                 },
-                "AVE": np.mean([0, 0]),
+                "AVE": 0.0,
                 "dialog_history": defendant_dh['dialog_history']
             }
             func.save_json(evaluation_result, os.path.join(self.intermediate_eval,  model, 'DD',  f'{id}.json'))

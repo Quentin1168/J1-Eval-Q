@@ -52,7 +52,7 @@ class GPTPlaintiff_civilPrediction(Agent):
         if other_statement == '':
             other_statement = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -339,7 +339,7 @@ class Qwen3_32BPlaintiff_civilPrediction(Agent):
         if other_statement == '':
             other_statement = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -468,7 +468,7 @@ class Qwen3_32BPlaintiff_civilPrediction(Agent):
                         elif '{' not in p:
                             system_prompt += p + '\n'
             else:
-                if "sex" in defendant.keys():
+                if "gender" in defendant.keys():
                     for p in profile:
                         if '{plaintiff_company_name}' in p:
                             system_prompt += p.format(plaintiff_company_name = plaintiff['name']) + '\n'

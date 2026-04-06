@@ -43,11 +43,11 @@ class CD:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--case_database", default = "/root/J1Bench/src/data/case/J1-Eval_CD.jsonl", type=str)
+        parser.add_argument("--case_database", default = "/root/projects/J1Bench/src/data/case/J1-Eval_CD.jsonl", type=str)
         parser.add_argument("--specific_character", default="Agent.Specific_character.GPT_CD", help="registry name of specific character agent") 
         parser.add_argument("--lawyer", default="Agent.Lawyer.GPT_CD", help="registry name of lawyer agent")
         parser.add_argument("--max_conversation_turn", default=20, type=int, help="max conversation turn between the lawyer and the specific character")
-        parser.add_argument("--save_path", default="/root/J1Bench/src/data/dialog_history/GPT/CD_dialog_history.jsonl", help="save path for dialog history")
+        parser.add_argument("--save_path", default="/root/projects/J1Bench/src/data/dialog_history/GPT/CD_dialog_history.jsonl", help="save path for dialog history")
         parser.add_argument("--max_workers", default=3, type=int, help="max workers for parallel CD")
         
     def remove_processed_cases(self): # 移除掉已经处理过的cases

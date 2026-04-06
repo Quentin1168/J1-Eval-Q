@@ -44,7 +44,7 @@ class GPTJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -114,7 +114,7 @@ class Qwen3_14BJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -184,7 +184,7 @@ class Qwen3_32BJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -254,7 +254,7 @@ class Gemma12BJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -324,7 +324,7 @@ class GLM9BJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -395,7 +395,7 @@ class Chatlaw2Judge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -472,7 +472,7 @@ class Deepseekv3Judge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -541,7 +541,7 @@ class LawLLMJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -612,7 +612,7 @@ class InternLM3Judge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -684,7 +684,7 @@ class LLaMa3_3Judge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -754,7 +754,7 @@ class Ministral8BJudge_criminalPrediction(Agent):
         defendant_info = judge_info['defendant']
         court_information = judge_info['court_information']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":

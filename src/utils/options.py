@@ -56,6 +56,7 @@ def get_parser():
             title="trainee",
             description="trainee configuration",
         )
+        print(registry.get_class(args.trainee))
         if registry.get_class(args.trainee) is not None:
             registry.get_class(args.trainee).add_parser_args(trainee_group)
         else:

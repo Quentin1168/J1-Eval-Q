@@ -2,6 +2,7 @@ import json
 from openai import OpenAI
 from requests.exceptions import ConnectionError, Timeout, RequestException
 import os
+import httpx
 
 # Set vllm serve api and url
 vllm_api_url = {
@@ -10,8 +11,8 @@ vllm_api_url = {
 }
 
 # Set OpenAI api and url
-api_key = 'YOUR_API_KEY'
-api_base = 'YOUR_API_BASE'
+api_key = vllm_api_url['api_key']
+api_base = vllm_api_url['base_url']
 
 os.environ['OPENAI_API_KEY'] = api_key
 os.environ['OPENAI_API_BASE'] = api_base
@@ -35,8 +36,12 @@ def save_json(data, save_path):
 
 def get_completion(prompt, history, flag):
     client = OpenAI(api_key=api_key,
-                    base_url=api_base)
-    max_retries = 3
+                    base_url=api_base,
+                    http_client=httpx.Client(
+        limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+        headers={"Connection": "close"}
+    ))
+    max_retries = 2
     for attempt in range(max_retries):
         try:
             SYSTEM_PROMPT = """你是一个得力的助手。"""
@@ -52,17 +57,26 @@ def get_completion(prompt, history, flag):
             if flag == 1:
                 chat_completion = client.chat.completions.create(
                     messages=messages,
-                    model="gpt-4o-2024-08-06",
+                    model="Qwen3.5-4B",
                     response_format={"type": "json_object"},
                     max_tokens=4096,
-                    temperature=0
+                    temperature=0,
+                    timeout=1200,
+                    extra_body={
+                        "chat_template_kwargs": {"enable_thinking": False},
+                        },
                     )
             else:
                 chat_completion = client.chat.completions.create(
                     messages=messages,
-                    model="gpt-4o-2024-08-06",
+                    model="Qwen3.5-4B",
                     max_tokens=4096,
-                    temperature=0
+                    temperature=0,
+                    timeout=1200,
+                    extra_body={
+                        "chat_template_kwargs": {"enable_thinking": False},
+                        },
+     
                     )
             
             response = chat_completion.choices[0].message.content

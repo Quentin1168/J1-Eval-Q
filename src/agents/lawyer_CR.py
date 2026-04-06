@@ -44,7 +44,7 @@ class GPTLawyer_criminalPrediction(Agent):
         defendant_info = lawyer_info['defendant']['personal_information']
         lawyer_defence = lawyer_info['lawyer']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -111,7 +111,7 @@ class Qwen3_32BLawyer_criminalPrediction(Agent):
         defendant_info = lawyer_info['defendant']['personal_information']
         lawyer_defence = lawyer_info['lawyer']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":

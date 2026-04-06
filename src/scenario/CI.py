@@ -46,12 +46,12 @@ class CI:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--case_database", default = "/root/J1Bench/src/data/case/J1-Eval_CI.jsonl", type=str)
+        parser.add_argument("--case_database", default = "/root/projects/J1Bench/src/data/case/J1-Eval_CI.jsonl", type=str)
         parser.add_argument("--plaintiff", default="Agent.Plaintiff.GPT_CI", help="registry name of plaintiff agent") 
         parser.add_argument("--defendant", default="Agent.Defendant.GPT_CI", help="registry name of defendant agent")
         parser.add_argument("--judge", default="Agent.Judge.GPT_CI", help="registry name of judge agent")
         parser.add_argument("--max_conversation_turn", default=50, type=int, help="max conversation turn")
-        parser.add_argument("--save_path", default="/root/J1Bench/src/data/dialog_history/GPT/CI_dialog_history.jsonl", help="save path for dialog history")
+        parser.add_argument("--save_path", default="/root/projects/J1Bench/src/data/dialog_history/GPT/CI_dialog_history.jsonl", help="save path for dialog history")
         parser.add_argument("--max_workers", default=2, type=int, help="max workers for parallel CI")
 
     def remove_processed_cases(self):
@@ -103,37 +103,44 @@ class CI:
         print(dialog_history[-1]["content"])
         
         for turn in range(self.max_conversation_turn):
+            # FIX 2: Prepend the role so the Judge knows who is talking
+            last_turn = dialog_history[-1]
+            judge_input = f"{last_turn['role']}: {last_turn['content']}"
+            
             with self.lock:
-                judge_response = judge.speak(dialog_history[-1]["content"])
+                judge_response = judge.speak(judge_input)
             
             if judge_response is None:
                 break
             else:
                 judge_response = judge_response.replace('审判长：','')
+                
             dialog_history.append({"turn": turn+1, "role": "Judge", "content": judge_response.replace('对原告说：', '').replace('对被告说：', '')})
-            print("--------------------------------------")
-            print(dialog_history[-1]["turn"], dialog_history[-1]["role"])
-            print(dialog_history[-1]["content"])
-            
-            dialogue = ''
-            for d in dialog_history:
-                dialogue += d["role"] + ": " + d["content"] + "\n"
-            
-            if '对原告说' in judge_response:
-                with self.lock:
-                    plaintiff_response = plaintiff.speak(dialogue)
-                dialog_history.append({"turn": turn+1, "role": "Plaintiff's Lawyer", "content": plaintiff_response})
-            elif '对被告说' in judge_response:
-                with self.lock:
-                    defendant_response = defendant.speak(dialogue)
-                dialog_history.append({"turn": turn+1, "role": "Defendant's Lawyer", "content": defendant_response})
-            
             print("--------------------------------------")
             print(dialog_history[-1]["turn"], dialog_history[-1]["role"])
             print(dialog_history[-1]["content"])
             
             if '结束庭审' in judge_response:
                 break
+            
+            # FIX 1: Pass ONLY the Judge's current response to the lawyers, NOT the combined history
+            lawyer_input = f"Judge: {judge_response}"
+            
+            if '对原告说' in judge_response:
+                with self.lock:
+                    plaintiff_response = plaintiff.speak(lawyer_input)
+                dialog_history.append({"turn": turn+1, "role": "Plaintiff's Lawyer", "content": plaintiff_response})
+                
+            elif '对被告说' in judge_response:
+                with self.lock:
+                    defendant_response = defendant.speak(lawyer_input)
+                dialog_history.append({"turn": turn+1, "role": "Defendant's Lawyer", "content": defendant_response})
+            
+
+
+            print("--------------------------------------")
+            print(dialog_history[-1]["turn"], dialog_history[-1]["role"])
+            print(dialog_history[-1]["content"])
             
         dialog_info = {
             "case_id": plaintiff.id,

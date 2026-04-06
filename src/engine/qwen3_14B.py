@@ -37,7 +37,7 @@ class qwen3_14BEngine(Engine):
             return
         self._initialized = True
         
-        self.model_path = "/tmp/qwen3_14B/Qwen3-14B"
+        self.model_path = "tmp/qwen3-5_4B/Qwen3_5-4b"
         self.sampling_params = SamplingParams(temperature=0, max_tokens=16384)
 
         print("Loading LLM model...", flush=True)

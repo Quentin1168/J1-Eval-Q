@@ -11,7 +11,7 @@ import argparse
 
 class KQEvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/J1Bench/src/data/case/J1-Eval_KQ.jsonl')
+        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_KQ.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -57,9 +57,9 @@ class KQEvaluator:
     
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/J1Bench/src/Eval/final_result/KQ", type = str)
+        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/KQ", type = str)
     
     def map_dialog_question(self, questions):
         mapped_questions = {}
@@ -214,9 +214,25 @@ class KQEvaluator:
                 
                 
                 full_prompt_sen = prompt_sen.format(gt_question = gt_question, gt_answer = gt_answer, model_answer = model_answers)
-                sen_eval = func.get_completion(full_prompt_sen, [], flag=0)[0]
-                sen_score = float(sen_eval.split('；')[0].replace('评分：',''))/10
-                reason = sen_eval.split('；')[1]
+                sen_eval = func.get_completion(full_prompt_sen, [], flag=0)[0].strip()
+                
+                # 1. Safely extract the score using Regex (looks for the first number at the start)
+                score_match = re.match(r'^(?:评分[：:\s]*)?(\d+(?:\.\d+)?)', sen_eval)
+                if score_match:
+                    sen_score = float(score_match.group(1)) / 10
+                else:
+                    # Fallback if no number is found at the start
+                    sen_score = 0.0 
+                
+                # 2. Safely extract the reason
+                if '原因' in sen_eval:
+                    # Capture everything from "原因" onwards
+                    reason = sen_eval[sen_eval.find('原因'):].strip()
+                elif '；' in sen_eval:
+                    reason = sen_eval.split('；', 1)[-1].strip()
+                else:
+                    reason = sen_eval
+                
                 print(reason)
                 nonbinary_scores += sen_score
                 long_context_scores += sen_score

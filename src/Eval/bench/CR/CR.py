@@ -12,7 +12,7 @@ import argparse
 
 class CREvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/J1Bench/src/data/case/J1-Eval_CR.jsonl')
+        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_CR.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -22,9 +22,9 @@ class CREvaluator:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/J1Bench/src/Eval/final_result/CR", type = str)    
+        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/CR", type = str)    
         
     def get_PFS(self, dialog_history):
         procedures = {
@@ -512,10 +512,14 @@ class CREvaluator:
             }
         else:
             result = {
-                'PFS': 0,
+                'PFS': {
+                    'UNI': 0,
+                    'STA': 0,
+                    'ACT': 0
+                },
                 'CRI': 0,
                 'VER': {
-                    'SEN': 1,
+                    'SEN': 1,  # get_final_score expects 1 here for failed cases
                     'FINE': 1
                 },
                 'REA': 0,

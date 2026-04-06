@@ -47,11 +47,11 @@ class LC:
     
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--case_database", default = "/root/J1Bench/src/data/case/J1-Eval_LC.jsonl", type=str)
+        parser.add_argument("--case_database", default = "/root/projects/J1Bench/src/data/case/J1-Eval_LC.jsonl", type=str)
         parser.add_argument("--general_public", default="Agent.General_public.LC_GPT", help="registry name of general_public agent") 
         parser.add_argument("--trainee", default="Agent.Trainee.LC_GPT", help="registry name of trainee agent")
         parser.add_argument("--max_conversation_turn", default=10, type=int, help="max conversation turn between the trainee and the general public")
-        parser.add_argument("--save_path", default="/root/J1Bench/src/data/dialog_history/GPT/LC_dialog_history.jsonl", help="save path for dialog history")
+        parser.add_argument("--save_path", default="/root/projects/J1Bench/src/data/dialog_history/GPT/LC_dialog_history.jsonl", help="save path for dialog history")
         parser.add_argument("--max_workers", default=5, type=int, help="max workers for parallel LC")
         
     def remove_processed_cases(self):

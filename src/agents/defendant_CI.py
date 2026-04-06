@@ -52,7 +52,7 @@ class GPTDefendant_civilPrediction(Agent):
         if other_statement == '':
             other_statement = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -318,7 +318,7 @@ class Qwen3_32BDefendant_civilPrediction(Agent):
         if other_statement == '':
             other_statement = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":

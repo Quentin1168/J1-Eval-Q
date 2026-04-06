@@ -48,7 +48,7 @@ class GPTJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -197,7 +197,7 @@ class Qwen3_14BJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -345,7 +345,7 @@ class Qwen3_32BJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -468,6 +468,7 @@ class Qwen3_32BJudge_civilPrediction(Agent):
         parser.add_argument('--judge_presence_penalty', type=float, default=0, help='presence penalty')
     
     def speak(self, content, save_to_memory = True):
+        print(f"DEBUG - {self.__class__.__name__} received input: {content}")
         messages = [{"role": memory[0], "content": memory[1]} for memory in self.memories]
         messages.append({"role": "user", "content": f"{content}"})
 
@@ -478,6 +479,8 @@ class Qwen3_32BJudge_civilPrediction(Agent):
             self.memorize(("assistant", response))
         
         return response
+
+    
 
 
 
@@ -494,7 +497,7 @@ class Gemma12BJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -642,7 +645,7 @@ class GLM9BJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -792,7 +795,7 @@ class Chatlaw2Judge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -947,7 +950,7 @@ class Deepseekv3Judge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -1095,7 +1098,7 @@ class LLaMa3_3Judge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -1243,7 +1246,7 @@ class InternLM3Judge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -1391,7 +1394,7 @@ class Ministral8BJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":
@@ -1540,7 +1543,7 @@ class LawLLMJudge_civilPrediction(Agent):
         if len(third_party_findings) == 0:
             third_party_findings = '无'
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CI":

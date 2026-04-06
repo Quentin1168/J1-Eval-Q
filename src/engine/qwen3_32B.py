@@ -23,7 +23,7 @@ from openai import OpenAI
 from requests.exceptions import ConnectionError, Timeout, RequestException
 import os
 
-
+import httpx
 
 
 torch._dynamo.config.suppress_errors = True
@@ -46,24 +46,33 @@ class qwen3_32BEngine(Engine):
             return
         self._initialized = True
         
-        self.model_path = "Qwen3-32B"
+        self.model_path = "Qwen3.5-4B"
         self.api_key = vllm_api_url['api_key']
         self.base_url = vllm_api_url['base_url']
         
         self.client = OpenAI(
             api_key = self.api_key,
-            base_url = self.base_url
+            base_url = self.base_url,
+            http_client=httpx.Client(
+        limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+        headers={"Connection": "close"}
+    )
         )
        
     def get_response(self, messages):
-        max_retries = 3
+        max_retries = 2
         for attempt in range(max_retries):
             try:
                 chat_completion = self.client.chat.completions.create(
                     messages=messages,
-                    model="Qwen3-32B",
-                    max_tokens=None,
-                    temperature=0.0
+                    model="Qwen3.5-4B",
+                    max_tokens=16384,
+                    timeout=1200.0,
+                    temperature=0.0,
+                    extra_body={
+                        "chat_template_kwargs": {"enable_thinking": False},
+                        },
+
                     )
 
                 response = chat_completion.choices[0].message.content

@@ -49,7 +49,7 @@ class GPTGeneral_public_consult(Agent):
         background = general_public_info['roles']['general_public']['background']
         topic_list = general_public_info['topic_list']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.LC":
@@ -130,7 +130,7 @@ class Qwen3_32BGeneral_public_consult(Agent):
         background = general_public_info['roles']['general_public']['background']
         topic_list = general_public_info['topic_list']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.LC":
@@ -164,7 +164,7 @@ class Qwen3_32BGeneral_public_consult(Agent):
             
             system_prompt = system_prompt.format(
                 background = background.replace('\n\n', ''),
-                style = ['roles']['general_public']['behavioral_style'].replace('\n\n', '\n'),
+                style = general_public_info['roles']['general_public']['behavioral_style'].replace('\n\n', '\n'),
                 role = name,
                 topic_list = content,
                 unfinished_topics = content

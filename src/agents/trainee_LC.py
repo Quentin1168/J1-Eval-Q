@@ -60,7 +60,7 @@ class GPTTrainee_consult(Trainee_consult):
             max_tokens=args.trainee_max_tokens
         )
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -107,7 +107,7 @@ class Qwen3_14BTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.qwen3_14B")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -153,7 +153,7 @@ class Gemma12BTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.Gemma12B")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -199,7 +199,7 @@ class Qwen3_32BTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.qwen3_32B")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -244,7 +244,7 @@ class GLM9BTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.GLM9B")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -298,7 +298,7 @@ class Deepseekv3Trainee_consult(Trainee_consult):
             max_tokens=args.trainee_max_tokens
         )
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -347,7 +347,7 @@ class LLaMa3_3Trainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.LLaMa3_3")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -395,7 +395,7 @@ class InternLM3Trainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.InternLM3")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -445,7 +445,7 @@ class Ministral8BTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.Ministral8B")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -492,7 +492,7 @@ class Chatlaw2Trainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.Chatlaw2")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         
@@ -539,7 +539,7 @@ class LawLLMTrainee_consult(Trainee_consult):
     def __init__(self, args=None, trainee_info=None, name="A"):
         engine = registry.get_class("Engine.lawllm")()
             
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
         
         

@@ -12,7 +12,7 @@ import argparse
 
 class CIEvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/J1Bench/src/data/case/J1-Eval_CI.jsonl')
+        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_CI.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -22,9 +22,9 @@ class CIEvaluator:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/J1Bench/src/Eval/final_result/CI", type = str)    
+        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/CI", type = str)    
     
     
     def get_PFS(self, dialog_history):
@@ -232,12 +232,17 @@ class CIEvaluator:
                 count += 1
         if gt_ans_judgment.endswith('\n'):
             gt_ans_judgment = gt_ans_judgment[:-1]
-                
-        full_prompt = prompt.format(gt_answer = gt_ans_judgment, model_answer = m_judgement)
-        gt_result = func.get_completion(full_prompt, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分','')
-        judgment_scores += float(gt_result)/10
 
-        
+        # Define a robust helper function to extract scores safely
+        def safe_extract_score(llm_output):
+            import re
+            match = re.match(r'^(?:评分[：:\s]*)?(\d+(?:\.\d+)?)', llm_output.strip())
+            return float(match.group(1)) / 10 if match else 0.0
+
+        full_prompt = prompt.format(gt_answer = gt_ans_judgment, model_answer = m_judgement)
+        ans_judg = func.get_completion(full_prompt, [], flag=0)[0]
+        judgment_scores += safe_extract_score(ans_judg)
+
         # 说理过程
         prompt_reasoning = '''你是一名法律专家。请根据“法律问题”和“标准答案”，判断“待评测答案”是否完全、准确地涵盖了“标准答案”的所有核心要点，由此给出0-10分的评分。你**不用考虑待评测答案表达是否简洁、重点是否突出、是否使用寒暄语、结构是否冗长等非实质性因素**，无须因不够简洁而扣分。
 
@@ -252,7 +257,8 @@ class CIEvaluator:
         '''
         gt_reasoning = gt_case['court_information']['ground_truth']['court_reason'].replace(' ', '').replace('-', '').replace('本院认为：', '')
         full_prompt_reasoning = prompt_reasoning.format(gt_answer = gt_reasoning, model_answer=reasons)
-        reason_score = float(func.get_completion(full_prompt_reasoning, [], flag=0)[0].split('；')[0].replace('评分：','').replace('分','').replace('（','').replace('）',''))/10
+        ans_rea = func.get_completion(full_prompt_reasoning, [], flag=0)[0]
+        reason_score = safe_extract_score(ans_rea)
         
         def remove_article_items(text):
             # 匹配“第x款”，x 可以是中文数字或阿拉伯数字

@@ -44,7 +44,7 @@ class GPTProcurator_criminalPrediction(Agent):
         defendant_info = procurator_info['defendant']['personal_information']
         procurator = procurator_info['procurator']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
@@ -115,7 +115,7 @@ class Qwen3_32BProcurator_criminalPrediction(Agent):
         defendant_info = procurator_info['defendant']['personal_information']
         procurator = procurator_info['procurator']
         
-        with open("/root/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CR":
