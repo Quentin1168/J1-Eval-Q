@@ -46,7 +46,7 @@ class GPTSpecific_character_generation(Agent):
         evidence = specific_character_info['evidence']
         defence = specific_character_info['statement_of_defence']
         
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.DD":

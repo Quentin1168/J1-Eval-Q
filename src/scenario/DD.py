@@ -44,11 +44,11 @@ class DD:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--case_database", default = "/root/projects/J1Bench/src/data/case/J1-Eval_DD.jsonl", type=str)
+        parser.add_argument("--case_database", default = "/workspace/J1-Eval-Q/src/data/case/J1-Eval_DD.jsonl", type=str)
         parser.add_argument("--specific_character", default="Agent.Specific_character.GPT_DD", help="registry name of specific_character agent") 
         parser.add_argument("--lawyer", default="Agent.Lawyer.GPT_DD", help="registry name of lawyer agent")
         parser.add_argument("--max_conversation_turn", default=15, type=int, help="max conversation turn between the lawyer and the specific_character")
-        parser.add_argument("--save_path", default="/root/projects/J1Bench/src/data/dialog_history/GPT/DD_dialog_history.jsonl", help="save path for dialog history")
+        parser.add_argument("--save_path", default="/workspace/J1-Eval-Q/src/data/dialog_history/GPT/DD_dialog_history.jsonl", help="save path for dialog history")
         parser.add_argument("--max_workers", default=3, type=int, help="max workers for parallel DD")
         
     def remove_processed_cases(self):
@@ -130,5 +130,7 @@ class DD:
     
     
     def save_dialog_info(self, dialog_info):
+        os.makedirs(os.path.dirname(self.save_path), exist_ok=True)
+
         with jsonlines.open(self.save_path, "a") as f:
             f.write(dialog_info)

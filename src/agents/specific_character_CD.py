@@ -48,7 +48,7 @@ class GPTSpecific_character_generation(Agent):
         case_details = specific_character_info['case_details']
         evidence = specific_character_info['evidence']
         
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -239,7 +239,7 @@ class Qwen332BSpecific_character_generation(Agent):
         case_details = specific_character_info['case_details']
         evidence = specific_character_info['evidence']
         
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":

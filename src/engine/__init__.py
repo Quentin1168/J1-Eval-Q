@@ -10,6 +10,7 @@ from .qwen3_32B import qwen3_32BEngine
 from .gemma12b import Gemma12BEngine
 from .internlm3 import InternLM3Engine
 from .llama33_70B import LLaMa3_3Engine
+from .qwen3_4b_grpo import qwen3_4b_grpo
 
 __all__= [
     'GPT_1120Engine',
@@ -22,5 +23,6 @@ __all__= [
     'qwen3_32BEngine',
     'Gemma12BEngine',
     'InternLM3Engine',
-    'LLaMa3_3Engine'
+    'LLaMa3_3Engine',
+    'qwen3_4b_grpo'
 ]
