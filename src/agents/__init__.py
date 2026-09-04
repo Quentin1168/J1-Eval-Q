@@ -12,7 +12,8 @@ from .trainee_KQ import (
     Deepseekv3Trainee_consult,
     LLaMa3_3Trainee_consult,
     InternLM3Trainee_consult,
-    Ministral8BTrainee_consult
+    Ministral8BTrainee_consult,
+    Qwen3_4B_GRPOTrainee_consult
 )
 
 from .lawyer_CD import (
@@ -26,7 +27,8 @@ from .lawyer_CD import (
     Deepseekv3Lawyer_generation,
     LLaMa3_3Lawyer_generation,
     InternLM3Lawyer_generation,
-    Ministral8BLawyer_generation
+    Ministral8BLawyer_generation,
+    Qwen3_4B_GRPOLawyer_generation
 )
 
 from .lawyer_DD import (
@@ -41,7 +43,8 @@ from .lawyer_DD import (
     Deepseekv3Lawyer_generation,
     LLaMa3_3Lawyer_generation,
     InternLM3Lawyer_generation,
-    Ministral8BLawyer_generation
+    Ministral8BLawyer_generation,
+    Qwen3_4B_GRPOLawyer_generation
 )
 
 from .specific_character_CD import (
@@ -79,7 +82,8 @@ from .trainee_LC import (
     Deepseekv3Trainee_consult,
     LLaMa3_3Trainee_consult,
     InternLM3Trainee_consult,
-    Ministral8BTrainee_consult
+    Ministral8BTrainee_consult,
+    Qwen3_4B_GRPOTrainee_consult
 )
 
 from .judge_CI import (

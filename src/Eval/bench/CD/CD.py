@@ -10,7 +10,7 @@ import argparse
 
 class CDEvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_CD.jsonl')
+        self.ground_truth = func.load_jsonl('/workspace/J1-Eval-Q/src/data/case/J1-Eval_CD.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -20,9 +20,9 @@ class CDEvaluator:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/CD", type = str)    
+        parser.add_argument("--dialog_history_dir", default = "/workspace/J1-Eval-Q/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/workspace/J1-Eval-Q/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/workspace/J1-Eval-Q/src/Eval/final_result/CD", type = str)    
     
     def _clean(self, text):
         clean_words = ['。', '法定代表人：', '住所：', '住', ' ']
@@ -277,7 +277,7 @@ class CDEvaluator:
                 temp = 0
         else:
             full_prompt_cla = prompt_cla.format(gt_answer=full_clas, model_answer=model_claims)
-            temp = float(func.get_completion(full_prompt_cla, [], flag=0)[0].replace('分',''))/10
+            temp = float(func.get_completion(full_prompt_cla, [], flag=0, agent="test")[0].replace('分',''))/10
         cla_scores += temp
         total_cla_scores += 1
         cla_score = cla_scores/total_cla_scores
@@ -308,7 +308,7 @@ class CDEvaluator:
             temp = 0
         else:
             full_prompt_evi = prompt_evi.format(gt_answer=full_evis, model_answer=model_evidence)
-            temp = float(func.get_completion(full_prompt_evi, [], flag = 0)[0].replace('分',''))/10
+            temp = float(func.get_completion(full_prompt_evi, [], flag = 0, agent="test")[0].replace('分',''))/10
         evi_scores += temp
         total_evi_scores += 1
         evi_score = evi_scores/total_evi_scores if total_evi_scores > 0 else 0
@@ -326,7 +326,7 @@ class CDEvaluator:
         gt_facts = plaintiff_case_details
         full_prompt_fac = prompt_fac.format(gt_answer = gt_facts, model_answer = model_facts)
         if model_facts != '未找到事实和理由' and model_facts != '...' and model_facts != '（待补充）' and model_facts != '（根据您后续提供的事实信息补充）':
-            temp = func.get_completion(full_prompt_fac, [], flag=0)[0].replace('分','')
+            temp = func.get_completion(full_prompt_fac, [], flag=0, agent="test")[0].replace('分','')
             facts_score = float(temp)/10
         else:
             facts_score = 0

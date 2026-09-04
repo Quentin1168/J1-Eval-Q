@@ -4,6 +4,13 @@ from collections import defaultdict
 import re
 import jsonlines
 import json
+from . import rag_help
+from pathlib import Path
+
+current_dir = Path(__file__).resolve().parent
+law_path = current_dir / "law.json"
+
+rag_db = rag_help.LawRetriever(str(law_path), "cpu")
 
 @register_class(alias="Agent.Lawyer.GenerationBase")
 class Lawyer_generation(Agent):
@@ -59,7 +66,7 @@ class GPTLawyer_generation(Lawyer_generation):
             max_tokens=args.lawyer_max_tokens
         )
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -128,7 +135,7 @@ class Qwen3_14BLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.qwen3_14B")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -191,9 +198,9 @@ class Qwen3_14BLawyer_generation(Lawyer_generation):
 @register_class(alias="Agent.Lawyer.Qwen3_32B")
 class Qwen3_32BLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
-        engine = registry.get_class("Engine.qwen3_32B")()
+        engine = registry.get_class("Engine.qwen3_32b")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -252,13 +259,77 @@ class Qwen3_32BLawyer_generation(Lawyer_generation):
 
         return response
   
-  
+@register_class(alias="Agent.Lawyer.Qwen3_4B_GRPO")
+class Qwen3_4B_GRPOLawyer_generation(Lawyer_generation):
+    def __init__(self, args=None, lawyer_info=None, name="A"):
+        engine = registry.get_class("Engine.qwen3_4b_grpo")()
+            
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
+            profiles = json.load(f)
+            
+        if args.scenario == "J1Bench.Scenario.CD":
+            system_prompt = ''
+            profile = profiles["lawyer_CD"]
+            template = '''
+                                民事起诉状
+                原告（如果是自然人）：XXX，男/女，XXXX年XX月XX日生，X族，住XXXXXX。
+                原告（如果是法人）：XXX，法定代表人：XXX，住所：XXXXXX。
+                
+                被告（如果是自然人）：XXX，男/女，XXXX年XX月XX日生，X族，住XXXXXX。
+                被告（如果是法人）：XXX，法定代表人：XXX，住所：XXXXXX。
+
+                诉讼请求：
+                1. 诉讼请求1.
+                2. 诉讼请求2.
+                ...
+                事实和理由：
+                ...
+                证据和证据来源，证人姓名和住所：
+                ...
+            '''
+            for p in profile:
+                if '{template}' in p:
+                    system_prompt += p.format(template = template) + '\n'
+                else:
+                    system_prompt += p + '\n'
+            if system_prompt.endswith('\n'):
+                system_prompt = system_prompt[:-1]
+            self.system_prompt = system_prompt
+            
+        super(Qwen3_4B_GRPOLawyer_generation, self).__init__(engine, lawyer_info, name)
+        
+    @staticmethod
+    def add_parser_args(parser):
+        parser.add_argument('--lawyer_temperature', type=float, default=0, help='temperature')
+        parser.add_argument('--lawyer_max_tokens', type=int, default=4096, help='max tokens')
+        parser.add_argument('--lawyer_top_p', type=float, default=1, help='top p')
+        parser.add_argument('--lawyer_frequency_penalty', type=float, default=0, help='frequency penalty')
+        parser.add_argument('--lawyer_presence_penalty', type=float, default=0, help='presence penalty')
+
+    def get_response(self, messages):
+        response = self.engine.get_response(messages)
+        return response
+
+    def speak(self, content, case_id, save_to_memory=True):
+        memories = self.memories[case_id]
+
+        messages = [{"role": memory[0], "content": memory[1]} for memory in memories]
+        messages.append({"role": "user", "content": content})
+
+        response = self.get_response(messages)
+
+        self.memorize(("user", content), case_id)
+        self.memorize(("assistant", response), case_id)
+
+        return response
+
+
 @register_class(alias="Agent.Lawyer.Gemma12B_CD")
 class Gemma12BLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.Gemma12B")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -323,7 +394,7 @@ class GLM9BLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.GLM9B")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -387,7 +458,7 @@ class Chatlaw2Lawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.Chatlaw2")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -453,7 +524,7 @@ class LawLLMLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.lawllm")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -524,7 +595,7 @@ class Deepseekv3Lawyer_generation(Lawyer_generation):
             max_tokens=args.lawyer_max_tokens
         )
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -590,7 +661,7 @@ class LLaMa3_3Lawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.LLaMa3_3")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -655,7 +726,7 @@ class InternLM3Lawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.InternLM3")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":
@@ -720,7 +791,7 @@ class Ministral8BLawyer_generation(Lawyer_generation):
     def __init__(self, args=None, lawyer_info=None, name="A"):
         engine = registry.get_class("Engine.Ministral8B")()
             
-        with open("/root/projects/J1Bench/src/agents/profiles.json", "r", encoding="utf-8") as f:
+        with open("/workspace/J1-Eval-Q/src/agents/profiles.json", "r", encoding="utf-8") as f:
             profiles = json.load(f)
             
         if args.scenario == "J1Bench.Scenario.CD":

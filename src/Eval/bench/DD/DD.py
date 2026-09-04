@@ -10,7 +10,7 @@ import argparse
 
 class DDEvaluator:
     def __init__(self, args):
-        self.ground_truth = func.load_jsonl('/root/projects/J1Bench/src/data/case/J1-Eval_DD.jsonl')
+        self.ground_truth = func.load_jsonl('/workspace/J1-Eval-Q/src/data/case/J1-Eval_DD.jsonl')
         self.args = args
         
         self.dialog_history_dir = args.dialog_history_dir
@@ -19,9 +19,9 @@ class DDEvaluator:
         
     @staticmethod
     def add_parser_args(parser):
-        parser.add_argument("--dialog_history_dir", default = "/root/projects/J1Bench/src/data/dialog_history", type = str)
-        parser.add_argument("--intermediate_eval", default = "/root/projects/J1Bench/src/Eval/eval_result", type = str)
-        parser.add_argument("--final_eval", default = "/root/projects/J1Bench/src/Eval/final_result/DD", type = str)
+        parser.add_argument("--dialog_history_dir", default = "/workspace/J1-Eval-Q/src/data/dialog_history", type = str)
+        parser.add_argument("--intermediate_eval", default = "/workspace/J1-Eval-Q/src/Eval/eval_result", type = str)
+        parser.add_argument("--final_eval", default = "/workspace/J1-Eval-Q/src/Eval/final_result/DD", type = str)
     
     def _clean(self, text):
         clean_words = ['。', '法定代表人：', '住所：', '住', ' ']
@@ -152,14 +152,14 @@ class DDEvaluator:
         model_defence = model_answer['defense'].replace(' ','')
         full_prompt_defense = prompt_defense.format(gt_answer = defense, model_answer = model_defence)
         
-        ans1 = func.get_completion(full_prompt_defense, [], flag=0)[0]
+        ans1 = func.get_completion(full_prompt_defense, [], flag=0, agent="test")[0]
         try:
             # First attempt
             DEF_score = safe_extract_score(ans1)
         except:
             # Fallback attempt
             full_prompt_defense = prompt_defense.format(gt_answer = defense, model_answer = original_model_answer)
-            ans2 = func.get_completion(full_prompt_defense, [], flag=0)[0]
+            ans2 = func.get_completion(full_prompt_defense, [], flag=0, agent="test")[0]
             DEF_score = safe_extract_score(ans2)
         
         # 统计证据
@@ -191,14 +191,14 @@ class DDEvaluator:
                 count += 1
                 
             full_prompt_evi = prompt_evi.format(gt_answer=gtevidence, model_answer=model_evidence)
-            ans_evi = func.get_completion(full_prompt_evi, [], flag=0)[0]
+            ans_evi = func.get_completion(full_prompt_evi, [], flag=0, agent="test")[0]
             temp = safe_extract_score(ans_evi)
             evi_scores += temp
             total_evi_scores += 1
         else:
             gtevidence = '无相关证据'
             full_prompt_evi = prompt_evi.format(gt_answer=gtevidence, model_answer=model_evidence)
-            ans_evi = func.get_completion(full_prompt_evi, [], flag=0)[0]
+            ans_evi = func.get_completion(full_prompt_evi, [], flag=0, agent="test")[0]
             temp = safe_extract_score(ans_evi)
             evi_scores += temp
             total_evi_scores += 1
